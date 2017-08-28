@@ -17,6 +17,7 @@
 #include <tango-gl/conversions.h>
 #include <tango_support.h>
 #include <tango_transform_helpers.h>
+#include <fstream>
 
 #include "tango-point-cloud/point_cloud_app.h"
 
@@ -270,6 +271,40 @@ void PointCloudApp::OnTouchEvent(int touch_count,
     return;
   }
   main_scene_.OnTouchEvent(touch_count, event, x0, y0, x1, y1);
+
+  LOGE("Touch Event: Saving point cloud...");
+
+  // Extract point cloud and save to .ply
+  TangoPointCloud* extractedPointCloud = nullptr;
+  TangoPoseData pose;
+  TangoErrorType ret_val = TangoSupport_getLatestPointCloudWithPose(
+          point_cloud_manager_, TANGO_COORDINATE_FRAME_START_OF_SERVICE,
+          TANGO_SUPPORT_ENGINE_OPENGL, TANGO_SUPPORT_ENGINE_TANGO,
+          TANGO_SUPPORT_ROTATION_IGNORED, &extractedPointCloud, &pose);
+
+  Tango3DR_PointCloud newPointCloud;
+  newPointCloud.num_points = extractedPointCloud->num_points;
+  newPointCloud.points = extractedPointCloud->points;
+  newPointCloud.timestamp = extractedPointCloud->timestamp;
+
+  Tango3DR_PointCloud_saveToPly(&newPointCloud, "/storage/emulated/0/Documents/point_cloud.ply");
+
+
+  std::ofstream pointCloudFile;
+  pointCloudFile.open("/storage/emulated/0/Documents/point_cloud.ply");
+
+  // construct .ply
+  pointCloudFile << "ply" << std::endl;
+  pointCloudFile << "format ascii 1.0" << std::endl;
+  pointCloudFile << "element vertex " << extractedPointCloud->num_points << std::endl;
+  pointCloudFile << "property float x" << std::endl;
+  pointCloudFile << "property float y" << std::endl;
+  pointCloudFile << "property float z" << std::endl;
+  pointCloudFile << "property quality" << std::endl;
+  pointCloudFile << "end_header" << std::endl;
+
+  pointCloudFile.close();
+
 }
 
 void PointCloudApp::SetScreenRotation(int screen_rotation) {

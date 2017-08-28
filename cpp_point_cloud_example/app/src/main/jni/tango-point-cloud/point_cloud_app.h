@@ -25,6 +25,7 @@
 #include <tango_client_api.h>  // NOLINT
 #include <tango-gl/util.h>
 #include <tango_support.h>
+#include <tango_3d_reconstruction_api.h>
 
 #include <tango-point-cloud/scene.h>
 

@@ -19,12 +19,13 @@ PROJECT_ROOT:= $(call my-dir)/../../../../..
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libcpp_point_cloud_example
-LOCAL_SHARED_LIBRARIES := tango_client_api tango_support tango_transform_helpers
+LOCAL_SHARED_LIBRARIES := tango_client_api tango_support tango_transform_helpers tango_3d_reconstruction
 LOCAL_CFLAGS    := -std=c++11
 
 LOCAL_C_INCLUDES := $(PROJECT_ROOT)/tango-service-sdk/include/ \
                     $(PROJECT_ROOT)/tango_gl/include \
-                    $(PROJECT_ROOT)/third_party/glm/
+                    $(PROJECT_ROOT)/third_party/glm/ \
+                    $(PROJECT_ROOT)/tango_3d_reconstruction/include
 
 LOCAL_SRC_FILES := jni_interface.cc \
                    point_cloud_drawable.cc \
@@ -50,3 +51,5 @@ $(call import-add-path, $(PROJECT_ROOT))
 $(call import-module,tango_client_api)
 $(call import-module,tango_support)
 $(call import-module,tango_transform_helpers)
+$(call import-module,tango_3d_reconstruction)
+
