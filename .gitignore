@@ -8,3 +8,7 @@
 *.dex
 *gen/
 *local.properties
+*.gradle
+*.externalNativeBuild
+/cpp_point_cloud_example/app/build/
+/cpp_point_cloud_example/build/
